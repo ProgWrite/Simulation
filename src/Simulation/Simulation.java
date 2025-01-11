@@ -1,0 +1,136 @@
+package Simulation;
+
+import Simulation.Actions.InitActions;
+import Simulation.Actions.TurnActions;
+import Simulation.Entities.Herbivore;
+import Simulation.Entities.Predator;
+
+import java.util.Scanner;
+
+public class Simulation {
+    private final static Scanner SCANNER = new Scanner(System.in);
+    private final TurnActions turn = new TurnActions();
+    private final GameMap gameMap = new GameMap();
+    private GameState state = GameState.PLAYING;
+    private boolean isPaused = false;
+    private final static int OPTION_START_SIMULATION = 1;
+    private final static int OPTION_ONE_MOVE = 2;
+    private final static int OPTION_PAUSE = 3;
+    private final static int RESUME_GAME = 4;
+    MapConsoleRenderer mapConsoleRenderer = new MapConsoleRenderer();
+    InitActions initialize = new InitActions();
+
+    public void simulateWorld(){
+        startMenu();
+    }
+
+    private void startMenu(){
+        String welcomeMessage = String.format("Добро пожаловать в симуляцию! Перед вами случайно сгенерированный мир! %n" +
+               "Введите %d чтобы спокойно наблюдать за миром пока зайцы или волки не одержат победу. %n" +
+                       "Введите %d чтобы сделать один ход. %n" +
+                       "Вы можете ввести %d в процессе симуляции чтобы поставить её на паузу ", OPTION_START_SIMULATION, OPTION_ONE_MOVE, OPTION_PAUSE
+        );
+        System.out.println(welcomeMessage);
+        showStartGameMapState();
+        String input = SCANNER.nextLine();
+        checkInput(input);
+    }
+
+    private void showStartGameMapState(){
+        initialize.setupRandomStartEntitiesPositions(gameMap);
+        System.out.println("------------------------------------------------");
+        System.out.println("Начальное состояние мира:");
+        System.out.println("Количество зайцев " + Herbivore.startingHerbivoreCount);
+        System.out.println("Количество волков " + Predator.startingPredatorCount);
+        mapConsoleRenderer.render(gameMap);
+
+    }
+
+    private void checkInput(String input){
+        if (input.equals("1")){
+            startSimulation(gameMap);
+            System.out.println();
+        }else if (input.equals("2")){
+            nextTurn(gameMap);
+        }else if(input.equals("3")){
+            System.out.printf("Вы не можете поставить симуляцию на паузу, так как игра еще не началась. Введите %d или %d чтобы начать игру ", OPTION_START_SIMULATION, OPTION_ONE_MOVE);
+            System.out.println();
+            String inputAgain = SCANNER.nextLine();
+            checkInput(inputAgain);
+        }
+        else{
+            System.out.printf("Вы ввели неверный символ! Введите %d или %d чтобы начать игру", OPTION_START_SIMULATION, OPTION_ONE_MOVE);
+            System.out.println();
+            String inputAgain = SCANNER.nextLine();
+            checkInput(inputAgain);
+        }
+    }
+
+    private void startSimulation(GameMap gameMap) {
+        new Thread(this::handleUserInput).start();
+        while (state == GameState.PLAYING) {
+            state = turn.makeTurn(gameMap);
+            pauseSimulation();
+        }
+    }
+
+    private void pauseSimulation() {
+        synchronized (this) {
+            while (isPaused) {
+                try {
+                    System.out.printf("Игра на паузе. Нажми %d чтобы возобновить игру", RESUME_GAME);
+                    System.out.println();
+                    wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
+    private void nextTurn(GameMap gameMap) {
+        state = turn.makeTurn(gameMap);
+        if (state != GameState.PLAYING) {
+            return;
+        }
+        getUserDecision(gameMap);
+    }
+
+    private void getUserDecision(GameMap gameMap) {
+        System.out.printf("Вновь сделайте выбор. %d - наблюдать за миром, %d - сделать один ход", OPTION_START_SIMULATION, OPTION_ONE_MOVE);
+        System.out.println();
+        String input = SCANNER.nextLine();
+        System.out.println();
+        if (input.equals("1")){
+            startSimulation(gameMap);
+        } else if (input.equals("2")){
+            nextTurn(gameMap);
+        }else{
+            System.out.println("Вы ввели неверный символ!");
+            getUserDecision(gameMap);
+        }
+    }
+
+    private synchronized void pauseGame(){
+        isPaused = true;
+    }
+
+    private synchronized void resumeGame() {
+        isPaused = false;
+        synchronized (this) {
+            notifyAll();
+        }
+    }
+
+    private void handleUserInput() {
+        while (state == GameState.PLAYING) {
+            String input = SCANNER.nextLine();
+            if (input.equals("3")) {
+                pauseGame();
+            } else if (input.equals("4")) {
+                resumeGame();
+            }
+        }
+    }
+
+}
