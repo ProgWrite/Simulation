@@ -48,14 +48,14 @@ public class Herbivore extends Creature<Grass> {
 
 
 //    @Override
-//    public boolean eat(Coordinates currentCoordinates, GameMap gameMap) {
+//    public boolean eat(Coordinates currentCoordinates, GameMap entities) {
 //        boolean hasEaten = false;
 //        while (hasEaten == true) {
 //            Coordinates targetCoordinates = takeTargetCoordinates(this);
 //            if(targetCoordinates == null) {
 //                break;
 //            }
-//            if (eatEntity(targetCoordinates, gameMap, Grass.class)) {
+//            if (eatEntity(targetCoordinates, entities, Grass.class)) {
 //                hasEaten = true;
 //                currentCoordinates = targetCoordinates;
 //            }

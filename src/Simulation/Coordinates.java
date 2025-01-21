@@ -3,12 +3,12 @@ package Simulation;
 import java.util.Objects;
 
 public class Coordinates {
-    public Integer rows;
-    public Integer columns;
+    public Integer row;
+    public Integer column;
 
-    public Coordinates(Integer rows, Integer columns) {
-        this.rows = rows;
-        this.columns = columns;
+    public Coordinates(Integer rows, Integer column) {
+        this.row = rows;
+        this.column = column;
     }
 
     @Override
@@ -16,11 +16,11 @@ public class Coordinates {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         Coordinates that = (Coordinates) o;
-        return Objects.equals(rows, that.rows) && Objects.equals(columns, that.columns);
+        return Objects.equals(row, that.row) && Objects.equals(column, that.column);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(rows, columns);
+        return Objects.hash(row, column);
     }
 }

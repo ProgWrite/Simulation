@@ -27,7 +27,7 @@ public class BreadthFirstSearch {
         HashMap<Coordinates, Coordinates> parentMap = new HashMap<>();
         boolean[][] visitedCells = new boolean[MAP_SIZE][MAP_SIZE];
         bfsQueue.add(start);
-        visitedCells[start.rows][start.columns] = true;
+        visitedCells[start.row][start.column] = true;
 
         while (!bfsQueue.isEmpty()) {
             Coordinates currentCoordinates = bfsQueue.poll();
@@ -37,8 +37,8 @@ public class BreadthFirstSearch {
             }
 
               for (int[] direction : MOVEMENT_DIRECTIONS) {
-                  int newRow = currentCoordinates.rows + direction[0];
-                  int newColumn = currentCoordinates.columns + direction[1];
+                  int newRow = currentCoordinates.row + direction[0];
+                  int newColumn = currentCoordinates.column + direction[1];
                   boolean checkForGrass = (gameMap.isSquareEmpty(new Coordinates(newRow, newColumn)) || gameMap.getEntity(new Coordinates(newRow, newColumn)) instanceof Grass);
                   boolean checkForHerbivore = (gameMap.isSquareEmpty(new Coordinates(newRow, newColumn)) || gameMap.getEntity(new Coordinates(newRow, newColumn)) instanceof Herbivore);
 

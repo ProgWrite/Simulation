@@ -15,7 +15,7 @@ public abstract class Creature<T> extends Entity {
             MOVE_RIGHT, MOVE_LEFT, MOVE_UP, MOVE_DOWN
     };
     protected final static int MAP_SIZE = 10;
-    List<Entity> listWithEntities = new ArrayList<>();
+    List<Entity> entities = new ArrayList<>();
 
     public Creature(Coordinates coordinates, int health) {
         super(coordinates);
@@ -56,12 +56,12 @@ public abstract class Creature<T> extends Entity {
 
 
     protected Coordinates getTargetCoordinates(Creature creature, Class<T> entityTarget){
-        listWithEntities.addAll(GameMap.gameMap.values());
+        entities.addAll(GameMap.entities.values());
         int minimumDistance = Integer.MAX_VALUE;
         Coordinates targetCoordinates = null;
-        for (Entity entity : GameMap.gameMap.values()) {
+        for (Entity entity : GameMap.entities.values()) {
             if(entityTarget.isInstance(entity)){
-                int distance = Math.abs(creature.coordinates.rows - entity.coordinates.rows) + Math.abs(creature.coordinates.columns - entity.coordinates.columns);
+                int distance = Math.abs(creature.coordinates.row - entity.coordinates.row) + Math.abs(creature.coordinates.column - entity.coordinates.column);
                 if (distance < minimumDistance){
                     minimumDistance = distance;
                     targetCoordinates = entity.coordinates;
@@ -75,8 +75,8 @@ public abstract class Creature<T> extends Entity {
 
     protected boolean eatEntity(Coordinates currentCoordinates, GameMap gameMap, Class<T> entityTarget){
         for (int[] direction : MOVEMENT_DIRECTIONS) {
-            int checkRow = currentCoordinates.rows + direction[0];
-            int checkColumn = currentCoordinates.columns + direction[1];
+            int checkRow = currentCoordinates.row + direction[0];
+            int checkColumn = currentCoordinates.column + direction[1];
             if (isValidCell(checkRow, checkColumn)) {
                 Coordinates eatCoordinates = new Coordinates(checkRow, checkColumn);
                 if (entityTarget.isInstance(gameMap.getEntity(eatCoordinates))) {

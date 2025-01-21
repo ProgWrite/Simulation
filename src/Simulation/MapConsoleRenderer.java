@@ -5,10 +5,10 @@ public class MapConsoleRenderer{
     private final static int MAP_SIZE = 10;
 
     public void render(GameMap gameMap){
-        for(int rows = 0; rows < MAP_SIZE; rows++){
+        for(int row = 0; row < MAP_SIZE; row++){
             StringBuilder line = new StringBuilder();
-            for(int columns = 0 ; columns < MAP_SIZE; columns++){
-                Coordinates coordinates = new Coordinates(columns, rows);
+            for(int column = 0; column < MAP_SIZE; column++){
+                Coordinates coordinates = new Coordinates(column, row);
                 if (gameMap.isSquareEmpty(coordinates)) {
                     line.append(renderEmptySquare(coordinates));
                 }

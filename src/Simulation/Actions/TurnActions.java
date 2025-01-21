@@ -7,8 +7,8 @@ import java.util.List;
 
 
 public class TurnActions{
-    List<Creature> listWithCreatures = new ArrayList<>();
-    List<Entity> listWithEntities = new ArrayList<>();
+    List<Creature> creatures = new ArrayList<>();
+    List<Entity> entities = new ArrayList<>();
     BreadthFirstSearch finder = new BreadthFirstSearch();
     MapConsoleRenderer renderer = new MapConsoleRenderer();
     InitActions initializer = new InitActions();
@@ -23,7 +23,7 @@ public class TurnActions{
 
     private void processCreatureTurn(GameMap gameMap){
         updateCreatureAndEntityLists();
-        for (Creature creature : listWithCreatures) {
+        for (Creature creature : creatures) {
             if(!creature.isEntityEaten){
                 performMovement(creature, gameMap);
             }
@@ -63,12 +63,12 @@ public class TurnActions{
     }
 
     private void updateCreatureAndEntityLists() {
-        listWithCreatures.clear();
-        listWithEntities.clear();
-        listWithEntities.addAll(GameMap.gameMap.values());
-        for (Entity entity : GameMap.gameMap.values()) {
+        creatures.clear();
+        entities.clear();
+        entities.addAll(GameMap.entities.values());
+        for (Entity entity : GameMap.entities.values()) {
             if (entity instanceof Creature) {
-                listWithCreatures.add((Creature) entity);
+                creatures.add((Creature) entity);
             }
         }
     }
