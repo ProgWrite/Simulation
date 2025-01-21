@@ -1,4 +1,4 @@
-package Simulation.Entities;
+package Simulation.entities;
 import Simulation.Coordinates;
 import Simulation.GameMap;
 import java.util.ArrayList;

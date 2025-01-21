@@ -1,7 +1,7 @@
-package Simulation.Actions;
+package Simulation.actions;
 
 import Simulation.*;
-import Simulation.Entities.*;
+import Simulation.entities.*;
 import java.util.ArrayList;
 import java.util.List;
 

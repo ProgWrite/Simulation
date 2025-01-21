@@ -1,9 +1,9 @@
 package Simulation;
 
-import Simulation.Entities.Creature;
-import Simulation.Entities.Grass;
-import Simulation.Entities.Herbivore;
-import Simulation.Entities.Predator;
+import Simulation.entities.Creature;
+import Simulation.entities.Grass;
+import Simulation.entities.Herbivore;
+import Simulation.entities.Predator;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.Map;

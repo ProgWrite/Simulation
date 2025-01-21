@@ -1,8 +1,8 @@
-package Simulation.Actions;
+package Simulation.actions;
 
 import Simulation.Coordinates;
 import Simulation.GameMap;
-import Simulation.Entities.*;
+import Simulation.entities.*;
 import java.util.Random;
 import java.util.ArrayList;
 import java.util.List;

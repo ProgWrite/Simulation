@@ -1,5 +1,5 @@
 package Simulation;
-import Simulation.Entities.Entity;
+import Simulation.entities.Entity;
 
 public class MapConsoleRenderer{
     private final static int MAP_SIZE = 10;

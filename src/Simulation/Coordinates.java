@@ -3,10 +3,10 @@ package Simulation;
 import java.util.Objects;
 
 public class Coordinates {
-    public Integer row;
-    public Integer column;
+    public int row;
+    public int column;
 
-    public Coordinates(Integer rows, Integer column) {
+    public Coordinates(int rows, int column) {
         this.row = rows;
         this.column = column;
     }

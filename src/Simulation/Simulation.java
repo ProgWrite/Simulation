@@ -1,9 +1,9 @@
 package Simulation;
 
-import Simulation.Actions.InitActions;
-import Simulation.Actions.TurnActions;
-import Simulation.Entities.Herbivore;
-import Simulation.Entities.Predator;
+import Simulation.actions.InitActions;
+import Simulation.actions.TurnActions;
+import Simulation.entities.Herbivore;
+import Simulation.entities.Predator;
 
 import java.util.Scanner;
 
@@ -32,7 +32,7 @@ public class Simulation {
         );
         System.out.println(welcomeMessage);
         showStartGameMapState();
-        String input = SCANNER.nextLine();
+        int input = SCANNER.nextInt();
         checkInput(input);
     }
 
@@ -46,22 +46,22 @@ public class Simulation {
 
     }
 
-    private void checkInput(String input){
-        if (input.equals("1")){
+    private void checkInput(int input){
+        if (input == OPTION_START_SIMULATION){
             startSimulation(gameMap);
             System.out.println();
-        }else if (input.equals("2")){
+        }else if (input == OPTION_ONE_MOVE){
             nextTurn(gameMap);
-        }else if(input.equals("3")){
+        }else if(input == OPTION_PAUSE){
             System.out.printf("Вы не можете поставить симуляцию на паузу, так как игра еще не началась. Введите %d или %d чтобы начать игру ", OPTION_START_SIMULATION, OPTION_ONE_MOVE);
             System.out.println();
-            String inputAgain = SCANNER.nextLine();
+            int inputAgain = SCANNER.nextInt();
             checkInput(inputAgain);
         }
         else{
             System.out.printf("Вы ввели неверный символ! Введите %d или %d чтобы начать игру", OPTION_START_SIMULATION, OPTION_ONE_MOVE);
             System.out.println();
-            String inputAgain = SCANNER.nextLine();
+            int inputAgain = SCANNER.nextInt();
             checkInput(inputAgain);
         }
     }
@@ -99,11 +99,11 @@ public class Simulation {
     private void getUserDecision(GameMap gameMap) {
         System.out.printf("Вновь сделайте выбор. %d - наблюдать за миром, %d - сделать один ход", OPTION_START_SIMULATION, OPTION_ONE_MOVE);
         System.out.println();
-        String input = SCANNER.nextLine();
+        int input = SCANNER.nextInt();
         System.out.println();
-        if (input.equals("1")){
+        if (input == OPTION_START_SIMULATION) {
             startSimulation(gameMap);
-        } else if (input.equals("2")){
+        } else if (input == OPTION_ONE_MOVE) {
             nextTurn(gameMap);
         }else{
             System.out.println("Вы ввели неверный символ!");
