@@ -27,7 +27,7 @@ public class Herbivore extends Creature<Grass> {
     };
 
     protected void increaseHealth(){
-        health += 5;
+        this.health += 5;
     }
 
 }

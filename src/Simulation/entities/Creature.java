@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Random;
 
 public abstract class Creature<T> extends Entity {
-    public int health;
+    protected int health;
     private final static int[] MOVE_RIGHT = new int[]{0,1};
     private final static int[] MOVE_LEFT = new int[]{0,-1};
     private final static int[] MOVE_UP = new int[]{1,0};
@@ -23,20 +23,35 @@ public abstract class Creature<T> extends Entity {
     }
 
     public void makeMove(Coordinates coordinatesToMove, GameMap entities){
-        if(this.health <= 0){
+        if(health <= 0){
             return;
         }
         if(eat(coordinates, entities)){
             increaseHealth();
 
         } else if (entities.isSquareEmpty(coordinatesToMove)){
-            if(this.health > 0) {
+            if(health > 0) {
                 entities.removeEntity(coordinates);
                 entities.setEntity(coordinatesToMove, this);
                 this.coordinates = coordinatesToMove;
             }
         }
     }
+
+
+    public void setHealth(int health) {
+        this.health = health;
+    }
+
+    public int getHealth() {
+        return health;
+    }
+
+    public int decreaseHealthByOne (int health){
+       return health - 1;
+    }
+
+    abstract void increaseHealth();
 
     public abstract Coordinates takeTargetCoordinates(Creature creature, GameMap entities);
 
@@ -77,7 +92,7 @@ public abstract class Creature<T> extends Entity {
     }
 
     public void checkDiedOfHunger(Creature creature, GameMap entities){
-        if(this.health <= 0){
+        if(health <= 0){
             isCreatureDiedOfHunger();
             entities.removeEntity(creature.coordinates);
         }
@@ -90,6 +105,6 @@ public abstract class Creature<T> extends Entity {
         return random.nextInt(maximumCreature - minimumCreature + 1) + minimumCreature;
     }
 
-    protected abstract void increaseHealth();
+
 
 }

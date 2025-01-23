@@ -27,13 +27,16 @@ public class TurnActions{
     }
 
     private void processCreatureTurn(GameMap entities){
+
         updateCreatureAndEntityLists();
         for (Creature creature : creatures) {
             if(!creature.isEntityEaten){
                 performMovement(creature, entities);
             }
             creature.checkDiedOfHunger(creature, entities);
-            creature.health--;
+            int startHealth = creature.getHealth();
+            creature.setHealth(creature.decreaseHealthByOne(startHealth));
+
         }
     }
 

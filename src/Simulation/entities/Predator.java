@@ -10,7 +10,7 @@ public class Predator extends Creature<Herbivore> {
     public static int startingPredatorCount = generateStartingCreatureCount(STARTING_MINUMUM_PREDATOR, STARTING_MAXIMUM_PREDATOR);
 
     public Predator(Coordinates coordinates, int speed) {
-        super(coordinates, 3);
+        super(coordinates, 2);
         this.speed = speed;
     }
 
@@ -32,7 +32,7 @@ public class Predator extends Creature<Herbivore> {
     }
 
     protected void increaseHealth(){
-        health += 2;
+        this.health += 2;
     }
 
 }

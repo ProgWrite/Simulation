@@ -123,10 +123,10 @@ public class Simulation {
 
     private void handleUserInput() {
         while (state == GameState.PLAYING) {
-            String input = SCANNER.nextLine();
-            if (input.equals("3")) {
+            int input = SCANNER.nextInt();
+            if (input == OPTION_PAUSE) {
                 pauseGame();
-            } else if (input.equals("4")) {
+            } else if (input == RESUME_GAME) {
                 resumeGame();
             }
         }
