@@ -9,8 +9,8 @@ import java.util.Scanner;
 
 public class Simulation {
     private final static Scanner SCANNER = new Scanner(System.in);
-    private final TurnActions turn = new TurnActions();
-    private final GameMap gameMap = new GameMap();
+    private final GameMap entities = new GameMap(10,10);
+    private final TurnActions turn = new TurnActions(entities);
     private GameState state = GameState.PLAYING;
     private boolean isPaused = false;
     private final static int OPTION_START_SIMULATION = 1;
@@ -37,21 +37,20 @@ public class Simulation {
     }
 
     private void showStartGameMapState(){
-        initialize.setupRandomStartEntitiesPositions(gameMap);
+        initialize.setupRandomStartEntitiesPositions(entities);
         System.out.println("------------------------------------------------");
         System.out.println("Начальное состояние мира:");
         System.out.println("Количество зайцев " + Herbivore.startingHerbivoreCount);
         System.out.println("Количество волков " + Predator.startingPredatorCount);
-        mapConsoleRenderer.render(gameMap);
-
+        mapConsoleRenderer.render(entities);
     }
 
     private void checkInput(int input){
         if (input == OPTION_START_SIMULATION){
-            startSimulation(gameMap);
+            startSimulation(entities);
             System.out.println();
         }else if (input == OPTION_ONE_MOVE){
-            nextTurn(gameMap);
+            nextTurn(entities);
         }else if(input == OPTION_PAUSE){
             System.out.printf("Вы не можете поставить симуляцию на паузу, так как игра еще не началась. Введите %d или %d чтобы начать игру ", OPTION_START_SIMULATION, OPTION_ONE_MOVE);
             System.out.println();
@@ -66,10 +65,10 @@ public class Simulation {
         }
     }
 
-    private void startSimulation(GameMap gameMap) {
+    private void startSimulation(GameMap entities) {
         new Thread(this::handleUserInput).start();
         while (state == GameState.PLAYING) {
-            state = turn.makeTurn(gameMap);
+            state = turn.makeTurn(entities);
             pauseSimulation();
         }
     }
@@ -88,26 +87,26 @@ public class Simulation {
         }
     }
 
-    private void nextTurn(GameMap gameMap) {
-        state = turn.makeTurn(gameMap);
+    private void nextTurn(GameMap entities) {
+        state = turn.makeTurn(entities);
         if (state != GameState.PLAYING) {
             return;
         }
-        getUserDecision(gameMap);
+        getUserDecision(entities);
     }
 
-    private void getUserDecision(GameMap gameMap) {
+    private void getUserDecision(GameMap entities) {
         System.out.printf("Вновь сделайте выбор. %d - наблюдать за миром, %d - сделать один ход", OPTION_START_SIMULATION, OPTION_ONE_MOVE);
         System.out.println();
         int input = SCANNER.nextInt();
         System.out.println();
         if (input == OPTION_START_SIMULATION) {
-            startSimulation(gameMap);
+            startSimulation(entities);
         } else if (input == OPTION_ONE_MOVE) {
-            nextTurn(gameMap);
+            nextTurn(entities);
         }else{
             System.out.println("Вы ввели неверный символ!");
-            getUserDecision(gameMap);
+            getUserDecision(entities);
         }
     }
 

@@ -6,5 +6,6 @@ public class Main {
             Simulation creator = new Simulation();
             creator.simulateWorld();
 
+
     }
 }

@@ -8,46 +8,51 @@ import java.util.List;
 
 public class TurnActions{
     List<Creature> creatures = new ArrayList<>();
-    List<Entity> entities = new ArrayList<>();
+    List<Entity> entityPool = new ArrayList<>();
     BreadthFirstSearch finder = new BreadthFirstSearch();
     MapConsoleRenderer renderer = new MapConsoleRenderer();
     InitActions initializer = new InitActions();
     private int countTurn = 1;
+    private final GameMap entities;
 
-    public GameState makeTurn(GameMap gameMap) {
-        processCreatureTurn(gameMap);
-        printInformationAboutTurn(gameMap);
-        addEntity(gameMap);
+    public TurnActions(GameMap entities){
+        this.entities = entities;
+    }
+
+    public GameState makeTurn(GameMap entities) {
+        processCreatureTurn(entities);
+        printInformationAboutTurn(entities);
+        addEntity(entities);
         return determineGameState();
     }
 
-    private void processCreatureTurn(GameMap gameMap){
+    private void processCreatureTurn(GameMap entities){
         updateCreatureAndEntityLists();
         for (Creature creature : creatures) {
             if(!creature.isEntityEaten){
-                performMovement(creature, gameMap);
+                performMovement(creature, entities);
             }
-            creature.checkDiedOfHunger(creature, gameMap);
+            creature.checkDiedOfHunger(creature, entities);
             creature.health--;
         }
     }
 
-    private void performMovement(Creature creature, GameMap gameMap){
+    private void performMovement(Creature creature, GameMap entities){
         Coordinates start = creature.coordinates;
-        Coordinates end = creature.takeTargetCoordinates(creature);
+        Coordinates end = creature.takeTargetCoordinates(creature, entities);
         int moves = (creature instanceof Predator) ? ((Predator) creature).speed : 1;
         for (int i = 0; i < moves; i++) {
             if (!start.equals(end)) {
-                Coordinates nextMove = finder.findPath(start, end, gameMap, creature);
+                Coordinates nextMove = finder.findPath(start, end, entities, creature);
                 if (!nextMove.equals(start)) {
-                    creature.makeMove(nextMove, gameMap);
+                    creature.makeMove(nextMove, entities);
                     start = nextMove;
                 }
             }
         }
     }
 
-    private void printInformationAboutTurn(GameMap gameMap){
+    private void printInformationAboutTurn(GameMap entities){
         try {
             Thread.sleep(1000);
             System.out.println();
@@ -55,7 +60,7 @@ public class TurnActions{
             System.out.println("Turn " + countTurn);
             System.out.println("Количество зайцев " + Herbivore.startingHerbivoreCount);
             System.out.println("Количество волков " + Predator.startingPredatorCount);
-            renderer.render(gameMap);
+            renderer.render(entities);
             countTurn++;
         } catch (InterruptedException e) {
             e.printStackTrace();
@@ -64,24 +69,24 @@ public class TurnActions{
 
     private void updateCreatureAndEntityLists() {
         creatures.clear();
-        entities.clear();
-        entities.addAll(GameMap.entities.values());
-        for (Entity entity : GameMap.entities.values()) {
+        entityPool.clear();
+        entityPool.addAll(entities.getAllEntities());
+        for (Entity entity : entityPool) {
             if (entity instanceof Creature) {
                 creatures.add((Creature) entity);
             }
         }
     }
 
-    private void addEntity(GameMap gameMap){
+    private void addEntity(GameMap entities){
         if (countTurn % 3 == 0) {
-            initializer.addGrass(gameMap);
+            initializer.addGrass(entities);
         }
         else if (countTurn % 4 == 0) {
-            initializer.addHerbivore(gameMap);
+            initializer.addHerbivore(entities);
         }
         else if (countTurn % 10 == 0) {
-            initializer.addPredator(gameMap);
+            initializer.addPredator(entities);
         }
     }
 

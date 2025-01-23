@@ -15,12 +15,12 @@ public class Predator extends Creature<Herbivore> {
     }
 
     @Override
-    public Coordinates takeTargetCoordinates(Creature creature) {
-        return super.getTargetCoordinates(creature, Herbivore.class);
+    public Coordinates takeTargetCoordinates(Creature creature, GameMap entities) {
+        return super.getTargetCoordinates(creature, Herbivore.class, entities);
     }
 
-    public boolean eat(Coordinates currentCoordinates, GameMap gameMap){
-        boolean eaten = super.eatEntity(currentCoordinates, gameMap, Herbivore.class);
+    public boolean eat(Coordinates currentCoordinates, GameMap entities){
+        boolean eaten = super.eatEntity(currentCoordinates, entities, Herbivore.class);
         if (eaten) {
             Herbivore.startingHerbivoreCount--;
         }

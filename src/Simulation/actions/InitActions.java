@@ -8,53 +8,52 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class InitActions{
-        private final static int MAP_SIZE = 10;
         private final static Random RANDOM = new Random();
-        List<EntityFactory> entities = new ArrayList<>();
+        List<EntityFactory> entityPool = new ArrayList<>();
 
 
-        public void setupRandomStartEntitiesPositions(GameMap gameMap){
-            entities.add(new EntityFactory(Herbivore::new, Herbivore.startingHerbivoreCount));
-            entities.add(new EntityFactory(Grass::new, 15));
-            entities.add(new EntityFactory(predator -> new Predator(predator,2),Predator.startingPredatorCount));
-            entities.add(new EntityFactory(Tree::new, 7));
-            entities.add(new EntityFactory(Mushroom::new, 7));
+        public void setupRandomStartEntitiesPositions(GameMap entities){
+            entityPool.add(new EntityFactory(Herbivore::new, Herbivore.startingHerbivoreCount));
+            entityPool.add(new EntityFactory(Grass::new, 15));
+            entityPool.add(new EntityFactory(predator -> new Predator(predator,2),Predator.startingPredatorCount));
+            entityPool.add(new EntityFactory(Tree::new, 7));
+            entityPool.add(new EntityFactory(Mushroom::new, 7));
 
-            for(EntityFactory entityFactory : entities){
+            for(EntityFactory entityFactory : entityPool){
                 for (int i = 0; i < entityFactory.total; i++) {
-                    Coordinates coordinates = generateEntityCoordinates(gameMap);
-                    gameMap.setEntity(coordinates, entityFactory.createEntity(coordinates));
+                    Coordinates coordinates = generateEntityCoordinates(entities);
+                    entities.setEntity(coordinates, entityFactory.createEntity(coordinates));
                 }
             }
         }
 
-    public void addGrass(GameMap gameMap){
-        Coordinates randomCoordinates = generateEntityCoordinates(gameMap);
-        gameMap.setEntity(randomCoordinates, new Grass(randomCoordinates));
+    public void addGrass(GameMap entities){
+        Coordinates randomCoordinates = generateEntityCoordinates(entities);
+        entities.setEntity(randomCoordinates, new Grass(randomCoordinates));
     }
 
-    public void addHerbivore(GameMap gameMap){
-        Coordinates randomCoordinates = generateEntityCoordinates(gameMap);
-        gameMap.setEntity(randomCoordinates, new Herbivore(randomCoordinates));
+    public void addHerbivore(GameMap entities){
+        Coordinates randomCoordinates = generateEntityCoordinates(entities);
+        entities.setEntity(randomCoordinates, new Herbivore(randomCoordinates));
         Herbivore.startingHerbivoreCount++;
     }
 
-    public void addPredator(GameMap gameMap){
-        Coordinates randomCoordinates = generateEntityCoordinates(gameMap);
-        gameMap.setEntity(randomCoordinates, new Predator(randomCoordinates,2));
+    public void addPredator(GameMap entities){
+        Coordinates randomCoordinates = generateEntityCoordinates(entities);
+        entities.setEntity(randomCoordinates, new Predator(randomCoordinates,2));
         Predator.startingPredatorCount++;
     }
 
-        private Coordinates generateEntityCoordinates(GameMap gameMap){
+        private Coordinates generateEntityCoordinates(GameMap entities){
             Coordinates randomCoordinates;
                 do{
-                    randomCoordinates = new Coordinates(RANDOM.nextInt(MAP_SIZE), RANDOM.nextInt(MAP_SIZE));
-                } while(!isFreeCoordinates(gameMap, randomCoordinates));
+                    randomCoordinates = new Coordinates(RANDOM.nextInt(entities.getHeight()), RANDOM.nextInt(entities.getWidth()));
+                } while(!isFreeCoordinates(entities, randomCoordinates));
                 return randomCoordinates;
             }
 
-        private boolean isFreeCoordinates(GameMap gameMap,Coordinates randomCoordinates){
-            return gameMap.isSquareEmpty(randomCoordinates);
+        private boolean isFreeCoordinates(GameMap entities, Coordinates randomCoordinates){
+            return entities.isSquareEmpty(randomCoordinates);
         }
 
     }

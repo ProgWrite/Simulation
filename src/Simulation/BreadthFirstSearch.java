@@ -20,12 +20,12 @@ public class BreadthFirstSearch {
     private final static int[][] MOVEMENT_DIRECTIONS = {
             MOVE_RIGHT, MOVE_LEFT, MOVE_UP, MOVE_DOWN
     };
-    private final static int MAP_SIZE = 10;
 
-    public Coordinates findPath(Coordinates start, Coordinates target, GameMap gameMap, Creature creature) {
+
+    public Coordinates findPath(Coordinates start, Coordinates target, GameMap entities, Creature creature) {
         Queue<Coordinates> bfsQueue = new LinkedList<>();
         HashMap<Coordinates, Coordinates> parentMap = new HashMap<>();
-        boolean[][] visitedCells = new boolean[MAP_SIZE][MAP_SIZE];
+        boolean[][] visitedCells = new boolean[entities.getHeight()][entities.getWidth()];
         bfsQueue.add(start);
         visitedCells[start.row][start.column] = true;
 
@@ -39,16 +39,17 @@ public class BreadthFirstSearch {
               for (int[] direction : MOVEMENT_DIRECTIONS) {
                   int newRow = currentCoordinates.row + direction[0];
                   int newColumn = currentCoordinates.column + direction[1];
-                  boolean checkForGrass = (gameMap.isSquareEmpty(new Coordinates(newRow, newColumn)) || gameMap.getEntity(new Coordinates(newRow, newColumn)) instanceof Grass);
-                  boolean checkForHerbivore = (gameMap.isSquareEmpty(new Coordinates(newRow, newColumn)) || gameMap.getEntity(new Coordinates(newRow, newColumn)) instanceof Herbivore);
+                  Coordinates newCoordinates = new Coordinates(newRow, newColumn);
+                  boolean checkForGrass = (entities.isSquareEmpty(new Coordinates(newRow, newColumn)) || entities.getEntity(new Coordinates(newRow, newColumn)) instanceof Grass);
+                  boolean checkForHerbivore = (entities.isSquareEmpty(new Coordinates(newRow, newColumn)) || entities.getEntity(new Coordinates(newRow, newColumn)) instanceof Herbivore);
 
                   if(creature instanceof Herbivore){
-                      if (isValidCell(newRow, newColumn) && !visitedCells[newRow][newColumn] && checkForGrass) {
+                      if (entities.isCoordinatesValid(newCoordinates) && !visitedCells[newRow][newColumn] && checkForGrass) {
                           addToQueueAndParentMap(newRow,newColumn,bfsQueue,parentMap,currentCoordinates,visitedCells);
                       }
                   }
                   else if(creature instanceof Predator){
-                      if (isValidCell(newRow, newColumn) && !visitedCells[newRow][newColumn] && checkForHerbivore) {
+                      if (entities.isCoordinatesValid(newCoordinates) && !visitedCells[newRow][newColumn] && checkForHerbivore) {
                           addToQueueAndParentMap(newRow,newColumn,bfsQueue,parentMap,currentCoordinates,visitedCells);
                       }
                   }
@@ -75,10 +76,6 @@ public class BreadthFirstSearch {
         Coordinates nextCoordinates = new Coordinates(newRow, newColumn);
         bfsQueue.add(nextCoordinates);
         parentMap.put(nextCoordinates, currentCoordinates);
-    }
-
-    private boolean isValidCell(int row, int column) {
-        return row >= 0 && row < MAP_SIZE && column >= 0 && column < MAP_SIZE;
     }
 }
 

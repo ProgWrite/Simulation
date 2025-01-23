@@ -1,6 +1,7 @@
 package Simulation.entities;
 import Simulation.Coordinates;
 import Simulation.GameMap;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -14,52 +15,37 @@ public abstract class Creature<T> extends Entity {
     private final static int[][] MOVEMENT_DIRECTIONS = {
             MOVE_RIGHT, MOVE_LEFT, MOVE_UP, MOVE_DOWN
     };
-    protected final static int MAP_SIZE = 10;
-    List<Entity> entities = new ArrayList<>();
+    List<Entity> entityPool = new ArrayList<>();
 
     public Creature(Coordinates coordinates, int health) {
         super(coordinates);
         this.health = health;
     }
 
-    public void makeMove(Coordinates coordinatesToMove, GameMap gameMap){
+    public void makeMove(Coordinates coordinatesToMove, GameMap entities){
         if(this.health <= 0){
             return;
         }
-        if(eat(coordinates, gameMap)){
+        if(eat(coordinates, entities)){
             increaseHealth();
 
-        } else if (gameMap.isSquareEmpty(coordinatesToMove)){
+        } else if (entities.isSquareEmpty(coordinatesToMove)){
             if(this.health > 0) {
-                gameMap.removeEntity(coordinates);
-                gameMap.setEntity(coordinatesToMove, this);
+                entities.removeEntity(coordinates);
+                entities.setEntity(coordinatesToMove, this);
                 this.coordinates = coordinatesToMove;
             }
         }
     }
 
-    public void checkDiedOfHunger(Creature creature, GameMap gameMap){
-        if(this.health <= 0){
-            isCreatureDiedOfHunger();
-            gameMap.removeEntity(creature.coordinates);
-        }
-    }
+    public abstract Coordinates takeTargetCoordinates(Creature creature, GameMap entities);
 
-    public abstract Coordinates takeTargetCoordinates(Creature creature);
-
-    protected abstract void isCreatureDiedOfHunger();
-
-    protected static int generateStartingCreatureCount(int minimumCreature, int maximumCreature) {
-        Random random = new Random();
-        return random.nextInt(maximumCreature - minimumCreature + 1) + minimumCreature;
-    }
-
-
-    protected Coordinates getTargetCoordinates(Creature creature, Class<T> entityTarget){
-        entities.addAll(GameMap.entities.values());
+    protected Coordinates getTargetCoordinates(Creature creature, Class<T> entityTarget, GameMap entities){
+        entityPool.clear();
+        entityPool.addAll(entities.getAllEntities());
         int minimumDistance = Integer.MAX_VALUE;
         Coordinates targetCoordinates = null;
-        for (Entity entity : GameMap.entities.values()) {
+        for (Entity entity : entityPool) {
             if(entityTarget.isInstance(entity)){
                 int distance = Math.abs(creature.coordinates.row - entity.coordinates.row) + Math.abs(creature.coordinates.column - entity.coordinates.column);
                 if (distance < minimumDistance){
@@ -71,17 +57,18 @@ public abstract class Creature<T> extends Entity {
         return targetCoordinates != null ? targetCoordinates : coordinates;
     }
 
-    protected abstract boolean eat(Coordinates currentCoordinates, GameMap gameMap);
+    protected abstract boolean eat(Coordinates currentCoordinates, GameMap entities);
 
-    protected boolean eatEntity(Coordinates currentCoordinates, GameMap gameMap, Class<T> entityTarget){
+    protected boolean eatEntity(Coordinates currentCoordinates, GameMap entities, Class<T> entityTarget){
         for (int[] direction : MOVEMENT_DIRECTIONS) {
             int checkRow = currentCoordinates.row + direction[0];
             int checkColumn = currentCoordinates.column + direction[1];
-            if (isValidCell(checkRow, checkColumn)) {
+            Coordinates checkCoordinates = new Coordinates(checkRow, checkColumn);
+            if (entities.isCoordinatesValid(checkCoordinates)) {
                 Coordinates eatCoordinates = new Coordinates(checkRow, checkColumn);
-                if (entityTarget.isInstance(gameMap.getEntity(eatCoordinates))) {
-                    gameMap.getEntity(eatCoordinates).isEntityEaten = true;
-                    gameMap.removeEntity(eatCoordinates);
+                if (entityTarget.isInstance(entities.getEntity(eatCoordinates))) {
+                    entities.getEntity(eatCoordinates).isEntityEaten = true;
+                    entities.removeEntity(eatCoordinates);
                     return true;
                 }
             }
@@ -89,10 +76,20 @@ public abstract class Creature<T> extends Entity {
         return false;
     }
 
-    protected abstract void increaseHealth();
-
-    private boolean isValidCell(int row, int column) {
-        return row >= 0 && row < MAP_SIZE && column >= 0 && column < MAP_SIZE;
+    public void checkDiedOfHunger(Creature creature, GameMap entities){
+        if(this.health <= 0){
+            isCreatureDiedOfHunger();
+            entities.removeEntity(creature.coordinates);
+        }
     }
+
+    protected abstract void isCreatureDiedOfHunger();
+
+    protected static int generateStartingCreatureCount(int minimumCreature, int maximumCreature) {
+        Random random = new Random();
+        return random.nextInt(maximumCreature - minimumCreature + 1) + minimumCreature;
+    }
+
+    protected abstract void increaseHealth();
 
 }

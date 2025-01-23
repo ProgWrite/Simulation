@@ -2,18 +2,18 @@ package Simulation;
 import Simulation.entities.Entity;
 
 public class MapConsoleRenderer{
-    private final static int MAP_SIZE = 10;
 
-    public void render(GameMap gameMap){
-        for(int row = 0; row < MAP_SIZE; row++){
+
+    public void render(GameMap entities){
+        for(int row = 0; row < entities.getHeight(); row++){
             StringBuilder line = new StringBuilder();
-            for(int column = 0; column < MAP_SIZE; column++){
+            for(int column = 0; column < entities.getWidth(); column++){
                 Coordinates coordinates = new Coordinates(column, row);
-                if (gameMap.isSquareEmpty(coordinates)) {
+                if (entities.isSquareEmpty(coordinates)) {
                     line.append(renderEmptySquare(coordinates));
                 }
                 else{
-                    line.append(getEntitySquare(gameMap.getEntity(coordinates)));
+                    line.append(getEntitySquare(entities.getEntity(coordinates)));
                 }
             }
             System.out.println(line);
