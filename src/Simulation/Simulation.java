@@ -9,16 +9,21 @@ import java.util.Scanner;
 
 public class Simulation {
     private final static Scanner SCANNER = new Scanner(System.in);
-    private final GameMap entities = new GameMap(10,10);
-    private final TurnActions turn = new TurnActions(entities);
+    private final GameMap entities;
+    private final TurnActions turn;
     private GameState state = GameState.PLAYING;
     private boolean isPaused = false;
     private final static int OPTION_START_SIMULATION = 1;
     private final static int OPTION_ONE_MOVE = 2;
     private final static int OPTION_PAUSE = 3;
     private final static int RESUME_GAME = 4;
-    MapConsoleRenderer mapConsoleRenderer = new MapConsoleRenderer();
-    InitActions initialize = new InitActions();
+    private MapConsoleRenderer mapConsoleRenderer = new MapConsoleRenderer();
+    private InitActions initialize = new InitActions();
+
+    public Simulation(GameMap entities, TurnActions turn) {
+        this.entities = entities;
+        this.turn = turn;
+    }
 
     public void simulateWorld(){
         startMenu();

@@ -6,7 +6,6 @@ import java.util.*;
 
 
 public class GameMap {
-
     private final Map<Coordinates, Entity> entities = new HashMap<>();
     private final int height;
     private final int width;
@@ -75,27 +74,6 @@ public class GameMap {
 
 }
 
-
-
-//    public void setEntity(Coordinates coordinates, Entity entity) {
-//        isCoordinatesValid(coordinates);
-//        entities.put(coordinates, entity);
-//    }
-//
-//    public Entity getEntity(Coordinates coordinates) {
-//        isCoordinatesValid(coordinates);
-//        return entities.get(coordinates);
-//    }
-//
-//    public void removeEntity(Coordinates coordinates) {
-//        isCoordinatesValid(coordinates);
-//        entities.remove(coordinates);
-//    }
-//      private void isCoordinatesValid(Coordinates coordinates) {
-//    if (coordinates.row < 0 || coordinates.row >= height || coordinates.column < 0 || coordinates.column >= width) {
-//        throw new IllegalArgumentException("Coordinates are out of bounds" + coordinates);
-//    }
-//}
 
 
 

@@ -15,7 +15,7 @@ public abstract class Creature<T> extends Entity {
     private final static int[][] MOVEMENT_DIRECTIONS = {
             MOVE_RIGHT, MOVE_LEFT, MOVE_UP, MOVE_DOWN
     };
-    List<Entity> entityPool = new ArrayList<>();
+    private List<Entity> entityPool = new ArrayList<>();
 
     public Creature(Coordinates coordinates, int health) {
         super(coordinates);
@@ -37,7 +37,6 @@ public abstract class Creature<T> extends Entity {
             }
         }
     }
-
 
     public void setHealth(int health) {
         this.health = health;
@@ -104,7 +103,4 @@ public abstract class Creature<T> extends Entity {
         Random random = new Random();
         return random.nextInt(maximumCreature - minimumCreature + 1) + minimumCreature;
     }
-
-
-
 }

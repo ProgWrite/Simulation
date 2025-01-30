@@ -2,11 +2,10 @@ package Simulation.entities;
 import Simulation.Coordinates;
 import Simulation.GameMap;
 
-
 public class Predator extends Creature<Herbivore> {
     public final int speed;
-    public static final int STARTING_MINUMUM_PREDATOR = 1;
-    public static final int STARTING_MAXIMUM_PREDATOR = 2;
+    private static final int STARTING_MINUMUM_PREDATOR = 1;
+    private static final int STARTING_MAXIMUM_PREDATOR = 2;
     public static int startingPredatorCount = generateStartingCreatureCount(STARTING_MINUMUM_PREDATOR, STARTING_MAXIMUM_PREDATOR);
 
     public Predator(Coordinates coordinates, int speed) {

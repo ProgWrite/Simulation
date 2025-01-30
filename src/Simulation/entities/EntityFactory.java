@@ -3,7 +3,7 @@ package Simulation.entities;
 import Simulation.Coordinates;
 
 public class EntityFactory {
-    final EntityCreator creator;
+    private final EntityCreator creator;
     public final int total;
 
     public EntityFactory(EntityCreator creator, int total) {

@@ -3,7 +3,6 @@ import Simulation.entities.Entity;
 
 public class MapConsoleRenderer{
 
-
     public void render(GameMap entities){
         for(int row = 0; row < entities.getHeight(); row++){
             StringBuilder line = new StringBuilder();
@@ -21,7 +20,7 @@ public class MapConsoleRenderer{
     }
 
     private String renderEmptySquare(Coordinates coordinates){
-        return (" " + " ." +"  ");
+        return ("  .  ");
     }
 
     private String selectPictureForEntity(Entity entity){
@@ -36,8 +35,9 @@ public class MapConsoleRenderer{
                 return "\uD83D\uDC07 ";
             case "Predator":
                 return "\uD83D\uDC3A ";
+            default:
+                return "?";
         }
-        return "?";
     }
 
     private String getEntitySquare(Entity entity) {
