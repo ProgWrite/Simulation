@@ -8,7 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public abstract class Creature<T extends Entity> extends Entity  {
+public abstract class Creature<T extends Entity> extends Entity implements Eatable  {
+    public boolean isCreatureEaten = false;
     protected int health;
     public Coordinates coordinates;
     private final static int[] MOVE_RIGHT = new int[]{0,1};
@@ -20,7 +21,6 @@ public abstract class Creature<T extends Entity> extends Entity  {
     };
     protected List<Entity> entityPool = new ArrayList<>();
 
-
     @Override
     public String toString() {
         return super.toString();
@@ -29,6 +29,10 @@ public abstract class Creature<T extends Entity> extends Entity  {
     public Creature(Coordinates coordinates, int health) {
         this.coordinates = coordinates;
         this.health = health;
+    }
+
+    public void setEaten(boolean isCreatureEaten) {
+        this.isCreatureEaten = isCreatureEaten;
     }
 
     public void makeMove(Coordinates coordinatesToMove, GameMap entities){
@@ -89,17 +93,20 @@ public abstract class Creature<T extends Entity> extends Entity  {
 
     protected abstract boolean eat(Coordinates currentCoordinates, GameMap entities);
 
-    protected boolean eatEntity(Coordinates currentCoordinates, GameMap entities, Class<T> entityTarget){
+    protected boolean eatEntity(Coordinates currentCoordinates, GameMap entities, Class<T> entityTarget) {
         for (int[] direction : MOVEMENT_DIRECTIONS) {
             int checkRow = currentCoordinates.row + direction[0];
             int checkColumn = currentCoordinates.column + direction[1];
             Coordinates checkCoordinates = new Coordinates(checkRow, checkColumn);
+
             if (entities.isCoordinatesValid(checkCoordinates)) {
                 Coordinates eatCoordinates = new Coordinates(checkRow, checkColumn);
+                Entity checkEntity = entities.getEntity(eatCoordinates);
 
-
-                if (entityTarget.isInstance(entities.getEntity(eatCoordinates))) {
-                    entities.getEntity(eatCoordinates).isEntityEaten = true;
+                if (entityTarget.isInstance(checkEntity)) {
+                    if(checkEntity instanceof Eatable) {
+                        ((Eatable) checkEntity).setEaten(true);
+                    }
                     entities.removeEntity(eatCoordinates);
                     return true;
                 }
