@@ -40,16 +40,14 @@ public class TurnActions extends Actions {
 
     private void performMovement(Creature creature, GameMap entities) {
         Coordinates start = creature.coordinates;
-        Coordinates end = creature.takeTargetCoordinates(creature, entities);
         int moves = (creature instanceof Predator) ? ((Predator) creature).speed : 1;
         for (int i = 0; i < moves; i++) {
-            if (!start.equals(end)) {
-                Coordinates nextMove = finder.findPath(start, end, entities, creature);
-                if (!nextMove.equals(start)) {
+                List<Coordinates> pathToTarget = finder.findPath(start,entities,creature);
+                if(pathToTarget.size() > 1) {
+                    Coordinates nextMove = pathToTarget.get(1);
                     creature.makeMove(nextMove, entities);
                     start = nextMove;
                 }
-            }
         }
     }
 

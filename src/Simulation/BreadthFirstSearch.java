@@ -22,9 +22,10 @@ public class BreadthFirstSearch {
     };
 
 
-    public Coordinates findPath(Coordinates start, Coordinates target, GameMap entities, Creature creature) {
+    public List<Coordinates> findPath(Coordinates start, GameMap entities, Creature creature) {
         Queue<Coordinates> bfsQueue = new LinkedList<>();
         HashMap<Coordinates, Coordinates> parentMap = new HashMap<>();
+        Coordinates target = creature.takeTargetCoordinates(creature,entities);
         boolean[][] visitedCells = new boolean[entities.getHeight()][entities.getWidth()];
         bfsQueue.add(start);
         visitedCells[start.row][start.column] = true;
@@ -55,10 +56,10 @@ public class BreadthFirstSearch {
                   }
               }
         }
-        return new Coordinates(0, 0);
+        return Collections.emptyList();
     }
 
-    private Coordinates getPathToTarget(Map<Coordinates, Coordinates> parentMap, Coordinates target) {
+    private List<Coordinates> getPathToTarget(Map<Coordinates, Coordinates> parentMap, Coordinates target) {
         List<Coordinates> way = new ArrayList<>();
         Coordinates currentCoordinates = target;
 
@@ -67,8 +68,7 @@ public class BreadthFirstSearch {
             currentCoordinates = parentMap.get(currentCoordinates);
         }
         Collections.reverse(way);
-        Coordinates coordinatesToMove = way.get(1);
-        return coordinatesToMove;
+        return way;
     }
 
     private void addToQueueAndParentMap(int newRow, int newColumn, Queue<Coordinates> bfsQueue, HashMap<Coordinates, Coordinates> parentMap, Coordinates currentCoordinates, boolean[][] visitedCells ){
