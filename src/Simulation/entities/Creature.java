@@ -1,13 +1,16 @@
 package Simulation.entities;
+
 import Simulation.Coordinates;
 import Simulation.GameMap;
+import Simulation.IGetTargetCoordinates;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public abstract class Creature<T> extends Entity {
+public abstract class Creature<T extends Entity> extends Entity  {
     protected int health;
+    public Coordinates coordinates;
     private final static int[] MOVE_RIGHT = new int[]{0,1};
     private final static int[] MOVE_LEFT = new int[]{0,-1};
     private final static int[] MOVE_UP = new int[]{1,0};
@@ -15,10 +18,16 @@ public abstract class Creature<T> extends Entity {
     private final static int[][] MOVEMENT_DIRECTIONS = {
             MOVE_RIGHT, MOVE_LEFT, MOVE_UP, MOVE_DOWN
     };
-    private List<Entity> entityPool = new ArrayList<>();
+    protected List<Entity> entityPool = new ArrayList<>();
+
+
+    @Override
+    public String toString() {
+        return super.toString();
+    }
 
     public Creature(Coordinates coordinates, int health) {
-        super(coordinates);
+        this.coordinates = coordinates;
         this.health = health;
     }
 
@@ -54,22 +63,29 @@ public abstract class Creature<T> extends Entity {
 
     public abstract Coordinates takeTargetCoordinates(Creature creature, GameMap entities);
 
-    protected Coordinates getTargetCoordinates(Creature creature, Class<T> entityTarget, GameMap entities){
+    protected Coordinates findNearestCoordinates(Class<T> entityTarget, GameMap entities) {
         entityPool.clear();
         entityPool.addAll(entities.getAllEntities());
         int minimumDistance = Integer.MAX_VALUE;
         Coordinates targetCoordinates = null;
-        for (Entity entity : entityPool) {
-            if(entityTarget.isInstance(entity)){
-                int distance = Math.abs(creature.coordinates.row - entity.coordinates.row) + Math.abs(creature.coordinates.column - entity.coordinates.column);
-                if (distance < minimumDistance){
-                    minimumDistance = distance;
-                    targetCoordinates = entity.coordinates;
+
+        for (Entity target : entityPool) {
+            if (entityTarget.isInstance(target)) {
+                T typedTarget = entityTarget.cast(target);
+                if (typedTarget instanceof IGetTargetCoordinates) {
+                    Coordinates checkCoordinates = ((IGetTargetCoordinates) typedTarget).getCoordinates();
+                    int distance = Math.abs(coordinates.row - checkCoordinates.row) + Math.abs(coordinates.column - checkCoordinates.column);
+                    if (distance < minimumDistance) {
+                        minimumDistance = distance;
+                        targetCoordinates = checkCoordinates;
+                    }
                 }
             }
         }
         return targetCoordinates != null ? targetCoordinates : coordinates;
     }
+
+
 
     protected abstract boolean eat(Coordinates currentCoordinates, GameMap entities);
 
@@ -80,6 +96,8 @@ public abstract class Creature<T> extends Entity {
             Coordinates checkCoordinates = new Coordinates(checkRow, checkColumn);
             if (entities.isCoordinatesValid(checkCoordinates)) {
                 Coordinates eatCoordinates = new Coordinates(checkRow, checkColumn);
+
+
                 if (entityTarget.isInstance(entities.getEntity(eatCoordinates))) {
                     entities.getEntity(eatCoordinates).isEntityEaten = true;
                     entities.removeEntity(eatCoordinates);
@@ -104,3 +122,6 @@ public abstract class Creature<T> extends Entity {
         return random.nextInt(maximumCreature - minimumCreature + 1) + minimumCreature;
     }
 }
+
+
+

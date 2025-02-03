@@ -1,17 +1,17 @@
 package Simulation;
+
 import Simulation.entities.Entity;
 
-public class MapConsoleRenderer{
+public class MapConsoleRenderer {
 
-    public void render(GameMap entities){
-        for(int row = 0; row < entities.getHeight(); row++){
+    public void render(GameMap entities) {
+        for (int row = 0; row < entities.getHeight(); row++) {
             StringBuilder line = new StringBuilder();
-            for(int column = 0; column < entities.getWidth(); column++){
+            for (int column = 0; column < entities.getWidth(); column++) {
                 Coordinates coordinates = new Coordinates(column, row);
                 if (entities.isSquareEmpty(coordinates)) {
                     line.append(renderEmptySquare(coordinates));
-                }
-                else{
+                } else {
                     line.append(getEntitySquare(entities.getEntity(coordinates)));
                 }
             }
@@ -19,12 +19,12 @@ public class MapConsoleRenderer{
         }
     }
 
-    private String renderEmptySquare(Coordinates coordinates){
+    private String renderEmptySquare(Coordinates coordinates) {
         return ("  .  ");
     }
 
-    private String selectPictureForEntity(Entity entity){
-        switch (entity.getClass().getSimpleName()){
+    private String selectPictureForEntity(Entity entity) {
+        switch (entity.getClass().getSimpleName()) {
             case "Grass":
                 return "\uD83C\uDF3F ";
             case "Mushroom":

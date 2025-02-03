@@ -27,7 +27,6 @@ public class TurnActions extends Actions {
     }
 
     private void processCreatureTurn(GameMap entities) {
-
         updateCreatureAndEntityLists();
         for (Creature creature : creatures) {
             if (!creature.isEntityEaten) {
@@ -36,7 +35,6 @@ public class TurnActions extends Actions {
             creature.checkDiedOfHunger(creature, entities);
             int startHealth = creature.getHealth();
             creature.setHealth(creature.decreaseHealthByOne(startHealth));
-
         }
     }
 

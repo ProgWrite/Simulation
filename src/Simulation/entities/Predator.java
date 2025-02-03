@@ -2,21 +2,25 @@ package Simulation.entities;
 import Simulation.Coordinates;
 import Simulation.GameMap;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class Predator extends Creature<Herbivore> {
     public final int speed;
     private static final int STARTING_MINUMUM_PREDATOR = 1;
     private static final int STARTING_MAXIMUM_PREDATOR = 2;
     public static int startingPredatorCount = generateStartingCreatureCount(STARTING_MINUMUM_PREDATOR, STARTING_MAXIMUM_PREDATOR);
+    protected List<Herbivore> herbivorePool = new ArrayList<>();
 
     public Predator(Coordinates coordinates, int speed) {
         super(coordinates, 2);
         this.speed = speed;
     }
 
-    @Override
     public Coordinates takeTargetCoordinates(Creature creature, GameMap entities) {
-        return super.getTargetCoordinates(creature, Herbivore.class, entities);
+        return findNearestCoordinates(Herbivore.class, entities);
     }
+
 
     public boolean eat(Coordinates currentCoordinates, GameMap entities){
         boolean eaten = super.eatEntity(currentCoordinates, entities, Herbivore.class);
@@ -33,5 +37,4 @@ public class Predator extends Creature<Herbivore> {
     protected void increaseHealth(){
         this.health += 2;
     }
-
 }
