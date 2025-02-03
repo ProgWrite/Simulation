@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Random;
 
 public abstract class Creature<T extends Entity> extends Entity implements Eatable  {
-    public boolean isCreatureEaten = false;
+    public boolean isEaten = false;
     protected int health;
     public Coordinates coordinates;
     private final static int[] MOVE_RIGHT = new int[]{0,1};
@@ -32,7 +32,7 @@ public abstract class Creature<T extends Entity> extends Entity implements Eatab
     }
 
     public void setEaten(boolean isCreatureEaten) {
-        this.isCreatureEaten = isCreatureEaten;
+        this.isEaten = isCreatureEaten;
     }
 
     public void makeMove(Coordinates coordinatesToMove, GameMap entities){

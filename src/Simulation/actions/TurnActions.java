@@ -29,7 +29,7 @@ public class TurnActions extends Actions {
     private void processCreatureTurn(GameMap entities) {
         updateCreatureAndEntityLists();
         for (Creature creature : creatures) {
-            if (!creature.isCreatureEaten) {
+            if (!creature.isEaten) {
                 performMovement(creature, entities);
             }
             creature.checkDiedOfHunger(creature, entities);
