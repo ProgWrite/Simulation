@@ -16,10 +16,16 @@ public class GameMap {
     }
 
     public int getHeight() {
+        if(height == 0) {
+            throw new IllegalArgumentException("Высота карты не может быть равна нулю");
+        }
         return height;
     }
 
     public int getWidth() {
+        if(width == 0) {
+            throw new IllegalArgumentException("Ширина карты не может быть равна нулю");
+        }
         return width;
     }
 

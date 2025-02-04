@@ -1,28 +1,30 @@
 package Simulation;
 
-import Simulation.actions.InitActions;
-import Simulation.actions.TurnActions;
+import Simulation.actions.Actions;
+import Simulation.actions.InitialSpawnAction;
 import Simulation.entities.Herbivore;
 import Simulation.entities.Predator;
 
+import java.util.List;
 import java.util.Scanner;
 
 public class Simulation {
     private final static Scanner SCANNER = new Scanner(System.in);
     private final GameMap entities;
-    private final TurnActions turn;
+
     private GameState state = GameState.PLAYING;
     private boolean isPaused = false;
     private final static int OPTION_START_SIMULATION = 1;
     private final static int OPTION_ONE_MOVE = 2;
     private final static int OPTION_PAUSE = 3;
     private final static int RESUME_GAME = 4;
-    private MapConsoleRenderer mapConsoleRenderer = new MapConsoleRenderer();
-    private InitActions initialize = new InitActions();
+    private final MapConsoleRenderer mapConsoleRenderer = new MapConsoleRenderer();
+    private final InitialSpawnAction initialize = new InitialSpawnAction();
+    private final List<Actions> turnActions ;
 
-    public Simulation(GameMap entities, TurnActions turn) {
+    public Simulation(GameMap entities, List<Actions> turnActions) {
         this.entities = entities;
-        this.turn = turn;
+        this.turnActions = turnActions;
     }
 
     public void simulateWorld(){
@@ -42,7 +44,7 @@ public class Simulation {
     }
 
     private void showStartGameMapState(){
-        initialize.setupRandomStartEntitiesPositions(entities);
+        initialize.execute(entities);
         System.out.println("------------------------------------------------");
         System.out.println("Начальное состояние мира:");
         System.out.println("Количество зайцев " + Herbivore.startingHerbivoreCount);
@@ -72,8 +74,12 @@ public class Simulation {
 
     private void startSimulation(GameMap entities) {
         new Thread(this::handleUserInput).start();
+
         while (state == GameState.PLAYING) {
-            state = turn.makeTurn(entities);
+            for(Actions action : turnActions){
+                action.execute(entities);
+            }
+            state = determineGameState();
             pauseSimulation();
         }
     }
@@ -93,7 +99,11 @@ public class Simulation {
     }
 
     private void nextTurn(GameMap entities) {
-        state = turn.makeTurn(entities);
+        state = determineGameState();
+        for(Actions action : turnActions){
+            state = determineGameState();
+            action.execute(entities);
+        }
         if (state != GameState.PLAYING) {
             return;
         }
@@ -113,6 +123,18 @@ public class Simulation {
             System.out.println("Вы ввели неверный символ!");
             getUserDecision(entities);
         }
+    }
+
+    private GameState determineGameState() {
+        if (Predator.startingPredatorCount == 0) {
+            System.out.println("Игра окончена! Сегодня зайцы смогли спастись от голодных волков!");
+            return GameState.HERBIVORE_WINS;
+
+        } else if (Herbivore.startingHerbivoreCount == 0) {
+            System.out.println("Игра окончена! Волки вкусно покушали и съели всех зайцев!");
+            return GameState.PREDATOR_WINS;
+        }
+        return GameState.PLAYING;
     }
 
     private synchronized void pauseGame(){

@@ -10,7 +10,7 @@ public class MapConsoleRenderer {
             for (int column = 0; column < entities.getWidth(); column++) {
                 Coordinates coordinates = new Coordinates(column, row);
                 if (entities.isSquareEmpty(coordinates)) {
-                    line.append(renderEmptySquare(coordinates));
+                    line.append(renderEmptySquare());
                 } else {
                     line.append(getEntitySquare(entities.getEntity(coordinates)));
                 }
@@ -19,7 +19,7 @@ public class MapConsoleRenderer {
         }
     }
 
-    private String renderEmptySquare(Coordinates coordinates) {
+    private String renderEmptySquare() {
         return ("  .  ");
     }
 

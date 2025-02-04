@@ -1,4 +1,7 @@
 package Simulation.actions;
 
-public class Actions {
+import Simulation.GameMap;
+
+public abstract class Actions {
+    public abstract void execute(GameMap entities);
 }

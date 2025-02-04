@@ -1,16 +1,13 @@
 package Simulation.entities;
+
 import Simulation.Coordinates;
 import Simulation.GameMap;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class Predator extends Creature<Herbivore> {
     public final int speed;
     private static final int STARTING_MINUMUM_PREDATOR = 1;
     private static final int STARTING_MAXIMUM_PREDATOR = 2;
     public static int startingPredatorCount = generateStartingCreatureCount(STARTING_MINUMUM_PREDATOR, STARTING_MAXIMUM_PREDATOR);
-    protected List<Herbivore> herbivorePool = new ArrayList<>();
 
     public Predator(Coordinates coordinates, int speed) {
         super(coordinates, 2);
@@ -21,8 +18,7 @@ public class Predator extends Creature<Herbivore> {
         return findNearestCoordinates(Herbivore.class, entities);
     }
 
-
-    public boolean eat(Coordinates currentCoordinates, GameMap entities){
+    public boolean eat(Coordinates currentCoordinates, GameMap entities) {
         boolean eaten = super.eatEntity(currentCoordinates, entities, Herbivore.class);
         if (eaten) {
             Herbivore.startingHerbivoreCount--;
@@ -30,11 +26,11 @@ public class Predator extends Creature<Herbivore> {
         return eaten;
     }
 
-    protected void isCreatureDiedOfHunger(){
+    protected void isCreatureDiedOfHunger() {
         startingPredatorCount--;
     }
 
-    protected void increaseHealth(){
+    protected void increaseHealth() {
         this.health += 2;
     }
 }

@@ -15,7 +15,6 @@ public class Herbivore extends Creature<Grass> implements IGetTargetCoordinates 
     protected List<Grass> grassPool = new ArrayList<>();
 
 
-
     public Herbivore(Coordinates coordinates) {
         super(coordinates, 10);
     }

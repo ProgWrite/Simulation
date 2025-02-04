@@ -89,8 +89,6 @@ public abstract class Creature<T extends Entity> extends Entity implements Eatab
         return targetCoordinates != null ? targetCoordinates : coordinates;
     }
 
-
-
     protected abstract boolean eat(Coordinates currentCoordinates, GameMap entities);
 
     protected boolean eatEntity(Coordinates currentCoordinates, GameMap entities, Class<T> entityTarget) {
